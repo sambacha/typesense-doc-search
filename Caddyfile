@@ -1,0 +1,4 @@
+tannhauser.io, :80, :443 {
+
+reverse_proxy http://web:5005
+}
