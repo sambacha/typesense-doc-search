@@ -57,7 +57,7 @@ echo "Restarting services"
 docker-compose down
 
 # Start Docker
-docker-compose up -d
+docker-compose up --force-recreate -d
 
 
 echo "Completed.. exiting..."
