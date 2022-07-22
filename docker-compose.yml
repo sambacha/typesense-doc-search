@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+    indexer:
+        image: Dockerfile
+        entrypoint: ["./cmd", "index", "--config", "config.json"]
+        volumes:
+            - /etc/convoy/convoy.json:/convoy.json
+        restart: on-failure
+        depends_on:
+            - mongo1
+            - redis_server
+            - typesense
+        networks:
+            - backendCluster
+    redis_server:
+        image: redis:alpine
+        hostname: redis_server
+        container_name: redis_server
+        restart: always
+        networks:
+            - backendCluster
+
+    typesense:
+        image: typesense/typesense:0.22.2
+        hostname: typesense
+        container_name: typesense
+        restart: always
+        environment:
+            TYPESENSE_DATA_DIR: /data/typesense
+            TYPESENSE_ENABLE_CORS: "true"
+            TYPESENSE_API_KEY: "config"
+        volumes:
+            - /var/convoy/data/typesense:/data/typesense
+        networks:
+            - backendCluster
+
+    caddy:
+        image: caddy
+        restart: unless-stopped
+        ports:
+            - '80:80'
+            - '443:443'
+        volumes:
+            - /etc/convoy/Caddyfile:/etc/caddy/Caddyfile
+        depends_on:
+            - web
+        networks:
+            - backendCluster
+
+networks:
+    backendCluster:
