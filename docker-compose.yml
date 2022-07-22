@@ -5,7 +5,7 @@ services:
         image: Dockerfile
         entrypoint: ["./cmd", "index", "--config", "config.json"]
         volumes:
-            - /etc/convoy/convoy.json:/convoy.json
+            - /etc/indexer/config.json:/config.json
         restart: on-failure
         depends_on:
             - mongo1
@@ -31,7 +31,7 @@ services:
             TYPESENSE_ENABLE_CORS: "true"
             TYPESENSE_API_KEY: "config"
         volumes:
-            - /var/convoy/data/typesense:/data/typesense
+            - /var/indexer/data/typesense:/data/typesense
         networks:
             - backendCluster
 
@@ -42,7 +42,7 @@ services:
             - '80:80'
             - '443:443'
         volumes:
-            - /etc/convoy/Caddyfile:/etc/caddy/Caddyfile
+            - /etc/indexer/Caddyfile:/etc/caddy/Caddyfile
         depends_on:
             - web
         networks:
