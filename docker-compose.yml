@@ -8,7 +8,6 @@ services:
             - /etc/indexer/config.json:/config.json
         restart: on-failure
         depends_on:
-            - mongo1
             - redis_server
             - typesense
         networks:
